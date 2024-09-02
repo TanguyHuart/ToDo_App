@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useState } from "#app";
+import { v4 as uuidv4 } from "uuid";
 import type { TTask } from "~/@types/todo";
 
 const taskList = useState<TTask[]>("list");
@@ -9,7 +10,7 @@ const addTask = (e: Event) => {
   e.preventDefault();
   if (input.value) {
     const taskToAdd: TTask = {
-      id: (taskList.value.length + 1).toString(),
+      id: uuidv4(),
       label: input.value,
       subtasks: [],
     };
@@ -27,7 +28,7 @@ const addTask = (e: Event) => {
     <h2>Ceci est le fomulaire pour ma todo !</h2>
     <form action="" class="form">
       <div class="flex gap-4 items-center">
-        <label for="input ">La tâche a effectuer :</label>
+        <label for="input">La tâche a effectuer :</label>
         <input
           id="input"
           v-model="input"

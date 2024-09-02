@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { useState } from "#app";
 import { ref } from "vue";
 import { type TTask } from "@/@types/todo";
 
 defineProps<{ task: TTask }>();
 
 const taskDone = ref(false);
-const modalIsVisible = useState("modal", () => false);
+const modalIsVisible = ref(false);
 
 const toogleTask = () => {
   taskDone.value = !taskDone.value;
+};
+
+const closeModal = () => {
+  modalIsVisible.value = false;
 };
 </script>
 
@@ -43,6 +46,11 @@ const toogleTask = () => {
         :task="sustask"
       />
     </div>
-    <TaskModal v-if="modalIsVisible" :task="task" />
+    <TaskModal
+      v-if="modalIsVisible"
+      :is-visible="modalIsVisible"
+      :task="task"
+      @close-modal="closeModal"
+    />
   </div>
 </template>

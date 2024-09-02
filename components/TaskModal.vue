@@ -1,25 +1,62 @@
 <script setup lang="ts">
 import { useState } from "#app";
+import { ref } from "vue";
+import { v4 as uuidv4 } from "uuid";
 import type { TTask } from "~/@types/todo";
 
-defineProps<{ task: TTask }>();
+defineProps<{ task: TTask; isVisible: boolean }>();
 
 const taskList = useState<TTask[]>("list");
-const modaleIsVisible = useState("modal");
+const addFormIsVisible = ref<boolean>(false);
+const modifyFormIsVisible = ref<boolean>(false);
+const addInput = ref<string>("");
+const modifyInput = ref<string>("");
+
+// emit défini un evenement qui se passe dans le composant pour l'envoyer au prent qui va le receptionner. quand la fonction closeModale est effectuée dans ce composant , emit est lancé
+// et le composant parent va lui meme lancer sa propre fonction.
+const emit = defineEmits(["close-modal"]);
 
 const closeModale = () => {
-  modaleIsVisible.value = false;
+  emit("close-modal");
 };
 
-// pour la fonction d'ajout , on génère l'id en fonction de l'id de ses parents sous la forme 1.2.4
-// pour la fonction de suppression, il faut parcourir le tableau de tache trouver la tache ayant le bon id et la supprimer de l'array subtask de son parent. boucle for.
+// pour la fonction d'ajout , on génère l'id en fonction de l'id de ses parents sous la forme uuid
+const addNewSubTask = (parentTask: TTask, subTaskLabel: string): TTask => {
+  const newSubTask: TTask = {
+    id: uuidv4(),
+    label: subTaskLabel,
+    subtasks: [],
+  };
+  parentTask.subtasks?.push(newSubTask);
+  closeModale();
+  return newSubTask;
+};
+
+// pour la fonction de suppression, il faut parcourir le tableau de taches trouver la tache ayant le bon id et la supprimer de l'array subtask de son parent. boucle for.
+const deleteTask = (tasks: TTask[], id: string) => {
+  for (let i = 0; i < tasks.length; i++) {
+    const task = tasks[i];
+    if (task.id === id) {
+      tasks.splice(i, 1);
+      closeModale();
+      return true;
+    }
+    if (task.subtasks && deleteTask(task.subtasks, id)) {
+      return true;
+    }
+  }
+  closeModale();
+  return false;
+};
+
 // pour la fonction de modification , trouver la tache en parcourant le tableau et modifier ses propriété
+const modifyTask = () => {};
 // attention: tableau potentiellement infini donc fonction récursive.
 </script>
 
 <template>
   <div
-    class="border bg-white rounded fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4"
+    class="border bg-white rounded fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 flex flex-col gap-4"
   >
     <button class="absolute top-0 right-0 font-bold p-2" @click="closeModale">
       X
@@ -27,9 +64,57 @@ const closeModale = () => {
     <div class="flex flex-col gap-4">
       <p>{{ task.label }}</p>
       <div class="flex gap-4">
-        <button class="w-20 bg-red-500 px-2">X</button>
+        <button
+          class="w-20 bg-red-500 px-2"
+          @click="deleteTask(taskList, task.id)"
+        >
+          X
+        </button>
         <button class="w-20 border px-2">Modifier</button>
-        <button class="w-20 border bg-blue-200 px-2">Sous-tâche</button>
+        <button
+          class="w-20 border bg-blue-200 px-2"
+          @click="addFormIsVisible = !addFormIsVisible"
+        >
+          +
+        </button>
+      </div>
+    </div>
+    <div v-if="addFormIsVisible">
+      <label for="input">Ajouter une sous tâche :</label>
+      <div class="flex gap-4">
+        <input
+          id="input"
+          v-model="addInput"
+          type="text"
+          placeholder="Entrez votre texte ici"
+          class="border border-black rounded p-2 focus:border-2"
+        />
+        <button
+          v-if="addInput"
+          class="bg-green-500 p-2 border rounded"
+          @click="addNewSubTask(task, addInput)"
+        >
+          OK !
+        </button>
+      </div>
+    </div>
+    <div v-if="modifyFormIsVisible">
+      <label for="input">Modifier la tâche :</label>
+      <div class="flex gap-4">
+        <input
+          id="input"
+          v-model="modifyInput"
+          type="text"
+          :placeholder="task.label"
+          class="border border-black rounded p-2 focus:border-2"
+        />
+        <button
+          v-if="modifyInput"
+          class="bg-green-500 p-2 border rounded"
+          @click="modifyTask()"
+        >
+          OK !
+        </button>
       </div>
     </div>
   </div>
