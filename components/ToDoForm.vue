@@ -7,6 +7,7 @@ import { writeTasksData } from "~/utils/writeData";
 const taskList = useState<TTask[]>("list");
 const input = useState<string>("input", () => "");
 
+// fonction spécifique d'ajout de tache 1er degres de parenté, fonctionne que si un input est rentré.
 const addTask = (e: Event) => {
   e.preventDefault();
   if (input.value) {

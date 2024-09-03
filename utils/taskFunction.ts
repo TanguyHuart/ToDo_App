@@ -1,5 +1,8 @@
 import type { TTask } from "~/@types/todo";
 
+// fonction de modification de la tâche
+// boucle sur tes tâche et les subtaches s'il y en a pour trouver l'id qui correspond a la tache modifiée .
+// modifie la tache dans l tableaud e référence puis fait appel a la fonction écrire le tableau dans le json.
 export const modifyTask = (
   taskList: TTask[],
   tasks: TTask[],
@@ -12,9 +15,6 @@ export const modifyTask = (
       task.label = modifiedTask.label;
       task.subtasks = modifiedTask.subtasks;
       task.isDone = modifiedTask.isDone;
-
-      console.log(tasks);
-
       writeTasksData(taskList);
       return true;
     }

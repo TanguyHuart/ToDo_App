@@ -23,6 +23,7 @@ const closeModale = () => {
 };
 
 // pour la fonction d'ajout , on génère l'id sous la forme uuid en prenant le parents comme argument et on push dans subtask
+// puis on écrit dans le JSON via la fonction writeTaskData
 const addNewSubTask = (parentTask: TTask, subTaskLabel: string): TTask => {
   const newSubTask: TTask = {
     id: uuidv4(),
@@ -37,6 +38,7 @@ const addNewSubTask = (parentTask: TTask, subTaskLabel: string): TTask => {
 };
 
 // pour la fonction de suppression, il faut parcourir le tableau de taches trouver la tache ayant le bon id et la supprimer de l'array subtask de son parent. boucle for.
+// puis on écrit sur le json le tableau modifié
 const deleteTask = (tasks: TTask[], id: string) => {
   for (let i = 0; i < tasks.length; i++) {
     const task = tasks[i];

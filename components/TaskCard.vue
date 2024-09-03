@@ -17,21 +17,17 @@ const checkTaskAreDone = (task: TTask) => {
   if (allTrue) {
     task.isDone = true;
     modifyTask(taskList.value, taskList.value, task);
-    console.log("alltrue est true");
   } else {
     task.isDone = false;
-    console.log("alltrue est false");
   }
 };
 
+// Au clic , check si il y a des sous taches , si oui , appel la fonction checkTaskAreDone qui va vérifié recursivement si les sous taches sont complétée ou pas .
 const toogleTask = (task: TTask) => {
   if (task.subtasks?.length > 0) {
     checkTaskAreDone(task);
   } else {
-    console.log("subtast = 0");
     task.isDone = !task.isDone;
-    console.log({ taskList: taskList.value, task });
-
     modifyTask(taskList.value, taskList.value, task);
   }
 };
