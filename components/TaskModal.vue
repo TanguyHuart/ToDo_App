@@ -3,6 +3,8 @@ import { useState } from "#app";
 import { ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import type { TTask } from "~/@types/todo";
+import { writeTasksData } from "~/utils/writeData";
+import { modifyTask } from "~/utils/taskFunction";
 
 defineProps<{ task: TTask; isVisible: boolean }>();
 
@@ -20,14 +22,16 @@ const closeModale = () => {
   emit("close-modal");
 };
 
-// pour la fonction d'ajout , on génère l'id en fonction de l'id de ses parents sous la forme uuid
+// pour la fonction d'ajout , on génère l'id sous la forme uuid en prenant le parents comme argument et on push dans subtask
 const addNewSubTask = (parentTask: TTask, subTaskLabel: string): TTask => {
   const newSubTask: TTask = {
     id: uuidv4(),
     label: subTaskLabel,
     subtasks: [],
+    isDone: false,
   };
   parentTask.subtasks?.push(newSubTask);
+  writeTasksData(taskList.value);
   closeModale();
   return newSubTask;
 };
@@ -38,6 +42,7 @@ const deleteTask = (tasks: TTask[], id: string) => {
     const task = tasks[i];
     if (task.id === id) {
       tasks.splice(i, 1);
+      writeTasksData(taskList.value);
       closeModale();
       return true;
     }
@@ -50,8 +55,12 @@ const deleteTask = (tasks: TTask[], id: string) => {
 };
 
 // pour la fonction de modification , trouver la tache en parcourant le tableau et modifier ses propriété
-const modifyTask = () => {};
-// attention: tableau potentiellement infini donc fonction récursive.
+const handleModifyTaskEvent = (task: TTask) => {
+  task.label = modifyInput.value;
+
+  modifyTask(taskList.value, taskList.value, task);
+  closeModale();
+};
 </script>
 
 <template>
@@ -70,7 +79,12 @@ const modifyTask = () => {};
         >
           X
         </button>
-        <button class="w-20 border px-2">Modifier</button>
+        <button
+          class="w-20 border px-2"
+          @click="modifyFormIsVisible = !modifyFormIsVisible"
+        >
+          Modifier
+        </button>
         <button
           class="w-20 border bg-blue-200 px-2"
           @click="addFormIsVisible = !addFormIsVisible"
@@ -111,7 +125,7 @@ const modifyTask = () => {};
         <button
           v-if="modifyInput"
           class="bg-green-500 p-2 border rounded"
-          @click="modifyTask()"
+          @click="handleModifyTaskEvent(task)"
         >
           OK !
         </button>

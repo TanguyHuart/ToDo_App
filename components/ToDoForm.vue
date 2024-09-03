@@ -2,6 +2,7 @@
 import { useState } from "#app";
 import { v4 as uuidv4 } from "uuid";
 import type { TTask } from "~/@types/todo";
+import { writeTasksData } from "~/utils/writeData";
 
 const taskList = useState<TTask[]>("list");
 const input = useState<string>("input", () => "");
@@ -13,9 +14,11 @@ const addTask = (e: Event) => {
       id: uuidv4(),
       label: input.value,
       subtasks: [],
+      isDone: false,
     };
     taskList.value.push(taskToAdd);
     input.value = "";
+    writeTasksData(taskList.value);
     return taskToAdd;
   }
 };

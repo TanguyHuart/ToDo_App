@@ -1,14 +1,39 @@
 <script setup lang="ts">
+import { useState } from "#app";
 import { ref } from "vue";
 import { type TTask } from "@/@types/todo";
+import { modifyTask } from "~/utils/taskFunction";
 
 defineProps<{ task: TTask }>();
 
-const taskDone = ref(false);
+const taskList = useState<TTask[]>("list");
+// const taskDone = ref(false);
 const modalIsVisible = ref(false);
 
-const toogleTask = () => {
-  taskDone.value = !taskDone.value;
+const checkTaskAreDone = (task: TTask) => {
+  const subTaskDone = task.subtasks?.map((element) => element.isDone);
+  const allTrue = subTaskDone.every((bol) => bol === true);
+
+  if (allTrue) {
+    task.isDone = true;
+    modifyTask(taskList.value, taskList.value, task);
+    console.log("alltrue est true");
+  } else {
+    task.isDone = false;
+    console.log("alltrue est false");
+  }
+};
+
+const toogleTask = (task: TTask) => {
+  if (task.subtasks?.length > 0) {
+    checkTaskAreDone(task);
+  } else {
+    console.log("subtast = 0");
+    task.isDone = !task.isDone;
+    console.log({ taskList: taskList.value, task });
+
+    modifyTask(taskList.value, taskList.value, task);
+  }
 };
 
 const closeModal = () => {
@@ -22,9 +47,12 @@ const closeModal = () => {
     class="w-full bg-blue-50 p-4 border border-neutral-500 rounded-xl flex flex-col gap-4"
   >
     <div class="flex justify-between gap-4">
-      <h2 :class="{ 'line-through': taskDone }">{{ task.label }}</h2>
+      <h2 :class="{ 'line-through': task.isDone }">{{ task.label }}</h2>
       <div class="flex gap-2">
-        <button class="h-10 bg-green-500 rounded-lg p-2" @click="toogleTask">
+        <button
+          class="h-10 bg-green-500 rounded-lg p-2"
+          @click="toogleTask(task)"
+        >
           Done
         </button>
         <button
