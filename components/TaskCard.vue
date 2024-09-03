@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { useState } from "#app";
 import { ref } from "vue";
-
+import { modifyTaskFunction } from "~/utils/writeData";
 import { type TTask } from "@/@types/todo";
-import { modifyTask } from "~/utils/taskFunction";
 
 defineProps<{ task: TTask }>();
 
@@ -23,7 +22,7 @@ const checkTaskAreDone = (task: TTask) => {
 
   if (allTrue) {
     task.isDone = true;
-    modifyTask(taskList.value, taskList.value, task);
+    modifyTaskFunction(taskList.value, taskList.value, task);
     emit("task-checked");
   } else {
     task.isDone = false;
@@ -38,7 +37,7 @@ const toogleTask = (task: TTask) => {
   } else {
     task.isDone = !task.isDone;
     emit("task-checked");
-    modifyTask(taskList.value, taskList.value, task);
+    modifyTaskFunction(taskList.value, taskList.value, task);
   }
 };
 

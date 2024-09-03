@@ -3,8 +3,7 @@ import { useState } from "#app";
 import { ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import type { TTask } from "~/@types/todo";
-import { writeTasksData } from "~/utils/writeData";
-import { modifyTask } from "~/utils/taskFunction";
+import { writeTasksData, modifyTaskFunction } from "~/utils/writeData";
 
 defineProps<{ task: TTask; isVisible: boolean }>();
 
@@ -66,7 +65,7 @@ const deleteTask = (tasks: TTask[], id: string) => {
 const handleModifyTaskEvent = (task: TTask) => {
   task.label = modifyInput.value;
 
-  modifyTask(taskList.value, taskList.value, task);
+  modifyTaskFunction(taskList.value, taskList.value, task);
   closeModale();
 };
 </script>
