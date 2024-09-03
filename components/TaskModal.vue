@@ -16,6 +16,7 @@ const modifyInput = ref<string>("");
 
 // emit défini un evenement qui se passe dans le composant pour l'envoyer au prent qui va le receptionner. quand la fonction closeModale est effectuée dans ce composant , emit est lancé
 // et le composant parent va lui meme lancer sa propre fonction.
+
 const emit = defineEmits(["close-modal"]);
 
 const closeModale = () => {
@@ -24,12 +25,14 @@ const closeModale = () => {
 
 // pour la fonction d'ajout , on génère l'id sous la forme uuid en prenant le parents comme argument et on push dans subtask
 // puis on écrit dans le JSON via la fonction writeTaskData
+
 const addNewSubTask = (parentTask: TTask, subTaskLabel: string): TTask => {
   const newSubTask: TTask = {
     id: uuidv4(),
     label: subTaskLabel,
     subtasks: [],
     isDone: false,
+    // index: parentTask.subtasks.length + 1,
   };
   parentTask.subtasks?.push(newSubTask);
   writeTasksData(taskList.value);
@@ -39,11 +42,13 @@ const addNewSubTask = (parentTask: TTask, subTaskLabel: string): TTask => {
 
 // pour la fonction de suppression, il faut parcourir le tableau de taches trouver la tache ayant le bon id et la supprimer de l'array subtask de son parent. boucle for.
 // puis on écrit sur le json le tableau modifié
+
 const deleteTask = (tasks: TTask[], id: string) => {
   for (let i = 0; i < tasks.length; i++) {
     const task = tasks[i];
     if (task.id === id) {
       tasks.splice(i, 1);
+      // organizeIndex(tasks);
       writeTasksData(taskList.value);
       closeModale();
       return true;
@@ -57,6 +62,7 @@ const deleteTask = (tasks: TTask[], id: string) => {
 };
 
 // pour la fonction de modification , trouver la tache en parcourant le tableau et modifier ses propriété
+
 const handleModifyTaskEvent = (task: TTask) => {
   task.label = modifyInput.value;
 

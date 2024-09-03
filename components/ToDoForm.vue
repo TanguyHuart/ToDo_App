@@ -8,6 +8,7 @@ const taskList = useState<TTask[]>("list");
 const input = useState<string>("input", () => "");
 
 // fonction spécifique d'ajout de tache 1er degres de parenté, fonctionne que si un input est rentré.
+
 const addTask = (e: Event) => {
   e.preventDefault();
   if (input.value) {
@@ -16,6 +17,7 @@ const addTask = (e: Event) => {
       label: input.value,
       subtasks: [],
       isDone: false,
+      // index: taskList.value.length + 1,
     };
     taskList.value.push(taskToAdd);
     input.value = "";

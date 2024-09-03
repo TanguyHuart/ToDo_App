@@ -3,10 +3,10 @@ import type { TTask } from "~/@types/todo";
 // fonction de modification de la tâche
 // boucle sur tes tâche et les subtaches s'il y en a pour trouver l'id qui correspond a la tache modifiée .
 // modifie la tache dans l tableaud e référence puis fait appel a la fonction écrire le tableau dans le json.
+
 export const modifyTask = (
   taskList: TTask[],
   tasks: TTask[],
-
   modifiedTask: TTask,
 ) => {
   for (let i = 0; i < tasks.length; i++) {
@@ -22,6 +22,10 @@ export const modifyTask = (
       return true;
     }
   }
-
   return false;
 };
+// export const organizeIndex = (tasks: TTask[]) => {
+//   for (let i = 0; i < tasks.length; i++) {
+//     tasks[i].index = i + 1;
+//   }
+// };

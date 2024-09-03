@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useState } from "#app";
 import { ref } from "vue";
+
 import { type TTask } from "@/@types/todo";
 import { modifyTask } from "~/utils/taskFunction";
 
@@ -10,6 +11,12 @@ const taskList = useState<TTask[]>("list");
 // const taskDone = ref(false);
 const modalIsVisible = ref(false);
 
+const emit = defineEmits(["task-checked"]);
+
+const taskChecked = (task: TTask) => {
+  checkTaskAreDone(task);
+};
+
 const checkTaskAreDone = (task: TTask) => {
   const subTaskDone = task.subtasks?.map((element) => element.isDone);
   const allTrue = subTaskDone.every((bol) => bol === true);
@@ -17,17 +24,20 @@ const checkTaskAreDone = (task: TTask) => {
   if (allTrue) {
     task.isDone = true;
     modifyTask(taskList.value, taskList.value, task);
+    emit("task-checked");
   } else {
     task.isDone = false;
   }
 };
 
 // Au clic , check si il y a des sous taches , si oui , appel la fonction checkTaskAreDone qui va vérifié recursivement si les sous taches sont complétée ou pas .
+
 const toogleTask = (task: TTask) => {
   if (task.subtasks?.length > 0) {
     checkTaskAreDone(task);
   } else {
     task.isDone = !task.isDone;
+    emit("task-checked");
     modifyTask(taskList.value, taskList.value, task);
   }
 };
@@ -41,6 +51,7 @@ const closeModal = () => {
   <div
     :datatype-id="task.id"
     class="w-full bg-blue-50 p-4 border border-neutral-500 rounded-xl flex flex-col gap-4"
+    :class="{ 'bg-green-200': task.isDone }"
   >
     <div class="flex justify-between gap-4">
       <h2 :class="{ 'line-through': task.isDone }">{{ task.label }}</h2>
@@ -68,8 +79,10 @@ const closeModal = () => {
         v-for="sustask of task.subtasks"
         :key="sustask.id"
         :task="sustask"
+        @task-checked="taskChecked(task)"
       />
     </div>
+
     <TaskModal
       v-if="modalIsVisible"
       :is-visible="modalIsVisible"
