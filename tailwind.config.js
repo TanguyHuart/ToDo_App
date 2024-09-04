@@ -9,7 +9,17 @@ export default {
     "./error.vue",
   ],
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        entrance: {
+          "0%": { transform: "scale(0.5)" },
+          "100%": { transform: "scale(1)" },
+        },
+      },
+      animation: {
+        entrance: "entrance 200ms ease-in-out 1",
+      },
+    },
   },
   plugins: [],
 };

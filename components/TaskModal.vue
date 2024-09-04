@@ -25,7 +25,11 @@ const closeModale = () => {
 // pour la fonction d'ajout , on génère l'id sous la forme uuid en prenant le parents comme argument et on push dans subtask
 // puis on écrit dans le JSON via la fonction writeTaskData
 
-const addNewSubTask = (parentTask: TTask, subTaskLabel: string): TTask => {
+const addNewSubTask = (
+  parentTask: TTask,
+  subTaskLabel: string,
+  index: number,
+): TTask => {
   const newSubTask: TTask = {
     id: uuidv4(),
     label: subTaskLabel,
@@ -33,7 +37,7 @@ const addNewSubTask = (parentTask: TTask, subTaskLabel: string): TTask => {
     isDone: false,
     // index: parentTask.subtasks.length + 1,
   };
-  parentTask.subtasks?.push(newSubTask);
+  parentTask.subtasks?.splice(index, 0, newSubTask);
   writeTasksData(taskList.value);
   closeModale();
   return newSubTask;
@@ -72,35 +76,40 @@ const handleModifyTaskEvent = (task: TTask) => {
 
 <template>
   <div
-    class="border bg-white rounded fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 flex flex-col gap-4"
+    class="z-20 shadow-md shadow-black bg-white rounded fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 flex flex-col gap-4 w-11/12 min-h-48"
   >
-    <button class="absolute top-0 right-0 font-bold p-2" @click="closeModale">
+    <button
+      class="absolute top-0 right-0 font-bold p-2 bg-red-400 transition-all hover:bg-red-500 border-b border-l w-10 h-10"
+      @click="closeModale"
+    >
       X
     </button>
     <div class="flex flex-col gap-4">
-      <p>{{ task.label }}</p>
-      <div class="flex gap-4">
+      <p class="text-center text-lg border-b border-neutral-300">
+        {{ task.label }}
+      </p>
+      <div class="flex flex-wrap gap-4 justify-evenly">
         <button
-          class="w-20 bg-red-500 px-2"
+          class="bg-red-500 p-4 min-w-32"
           @click="deleteTask(taskList, task.id)"
         >
-          X
+          Supprimer la tâche
         </button>
         <button
-          class="w-20 border px-2"
+          class="border p-4 min-w-32"
           @click="modifyFormIsVisible = !modifyFormIsVisible"
         >
-          Modifier
+          Modifier la tâche
         </button>
         <button
-          class="w-20 border bg-blue-200 px-2"
+          class="border bg-blue-200 p-4 min-w-32"
           @click="addFormIsVisible = !addFormIsVisible"
         >
-          +
+          Ajouter une sous-tâche
         </button>
       </div>
     </div>
-    <div v-if="addFormIsVisible">
+    <div v-if="addFormIsVisible" class="flex flex-col items-center">
       <label for="input">Ajouter une sous tâche :</label>
       <div class="flex gap-4">
         <input
@@ -110,16 +119,30 @@ const handleModifyTaskEvent = (task: TTask) => {
           placeholder="Entrez votre texte ici"
           class="border border-black rounded p-2 focus:border-2"
         />
-        <button
-          v-if="addInput"
-          class="bg-green-500 p-2 border rounded"
-          @click="addNewSubTask(task, addInput)"
-        >
-          OK !
-        </button>
+        <div v-if="addInput">
+          <p>En quel position ?</p>
+          <div class="flex flex-wrap gap-2">
+            <button
+              v-for="subtask of task.subtasks"
+              :key="subtask.id"
+              class="bg-green-500 p-2 border rounded w-10"
+              @click="
+                addNewSubTask(task, addInput, task.subtasks.indexOf(subtask))
+              "
+            >
+              {{ task.subtasks.indexOf(subtask) + 1 }}
+            </button>
+            <button
+              class="bg-green-500 p-2 border rounded w-10"
+              @click="addNewSubTask(task, addInput, task.subtasks.length)"
+            >
+              {{ task.subtasks.length + 1 }}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-    <div v-if="modifyFormIsVisible">
+    <div v-if="modifyFormIsVisible" class="flex flex-col items-center">
       <label for="input">Modifier la tâche :</label>
       <div class="flex gap-4">
         <input

@@ -23,7 +23,11 @@ const onEnd = () => {
       @end="onEnd"
     >
       <template #item="{ element, index }">
-        <TaskCard :task="element" :index="index" />
+        <div
+          class="border-4 border-double border-yellow-500 shadow-md bg-yellow-50 min-w-full"
+        >
+          <TaskCard :task="element" :index="index" />
+        </div>
       </template>
     </draggable>
   </div>

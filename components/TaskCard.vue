@@ -1,21 +1,26 @@
 <script setup lang="ts">
 import { useState } from "#app";
 import { ref } from "vue";
-import { modifyTaskFunction } from "~/utils/writeData";
+import draggable from "vuedraggable";
+import { modifyTaskFunction, writeTasksData } from "~/utils/writeData";
 import { type TTask } from "@/@types/todo";
 
-defineProps<{ task: TTask }>();
+const props = defineProps<{ task: TTask }>();
 
 const taskList = useState<TTask[]>("list");
 // const taskDone = ref(false);
 const modalIsVisible = ref(false);
+const localTask = ref<TTask>(props.task);
 
+// creation d'un evenement vers le parents losque que on check une task
 const emit = defineEmits(["task-checked"]);
 
 const taskChecked = (task: TTask) => {
   checkTaskAreDone(task);
 };
 
+// fonction qui permet de checker si les enfant et parents ont bien leur tache completes, couplée a l'émission de l'evenement emit , permet de faire une boucle vers tous les parents successifs.
+// cree un tableau de tous les booléen check et renvoie false si un check est false.
 const checkTaskAreDone = (task: TTask) => {
   const subTaskDone = task.subtasks?.map((element) => element.isDone);
   const allTrue = subTaskDone.every((bol) => bol === true);
@@ -26,6 +31,7 @@ const checkTaskAreDone = (task: TTask) => {
     emit("task-checked");
   } else {
     task.isDone = false;
+    emit("task-checked");
   }
 };
 
@@ -41,28 +47,42 @@ const toogleTask = (task: TTask) => {
   }
 };
 
+// fonction qui permet de fermer la modale de gestion de tâche
 const closeModal = () => {
   modalIsVisible.value = false;
+};
+
+// fonction de fin drag/drop qui permet d'ecrire le nouveau positionnement dans le json.
+const onEnd = () => {
+  writeTasksData(taskList.value);
 };
 </script>
 
 <template>
   <div
     :datatype-id="task.id"
-    class="w-full bg-blue-50 p-4 border border-neutral-500 rounded-xl flex flex-col gap-4"
-    :class="{ 'bg-green-200': task.isDone }"
+    class="w-full p-4 pb-0 pr-0 flex flex-col border-t-4"
+    :class="{ 'bg-green-200': task.isDone, 'bg-yellow-50': !task.isDone }"
   >
-    <div class="flex justify-between gap-4">
+    <div class="flex justify-between gap-4 py-2">
       <h2 :class="{ 'line-through': task.isDone }">{{ task.label }}</h2>
-      <div class="flex gap-2">
+      <div class="flex gap-2 pb-2 pr-2">
         <button
+          v-if="!task.isDone"
           class="h-10 bg-green-500 rounded-lg p-2"
           @click="toogleTask(task)"
         >
           Done
         </button>
         <button
-          class="h-10 bg-neutral-300 rounded-lg p-2"
+          v-if="task.isDone"
+          class="h-10 bg-red-500 rounded-lg p-2"
+          @click="toogleTask(task)"
+        >
+          Undo
+        </button>
+        <button
+          class="h-10 bg-blue-300 rounded-lg p-2"
           @click="modalIsVisible = true"
         >
           Menu
@@ -72,14 +92,22 @@ const closeModal = () => {
 
     <div
       v-if="task.subtasks && task.subtasks?.length > 0"
-      class="flex flex-col items-center w-full gap-4"
+      class="flex flex-col items-center w-full border-l border-dotted border-neutral-500"
     >
-      <TaskCard
-        v-for="sustask of task.subtasks"
-        :key="sustask.id"
-        :task="sustask"
-        @task-checked="taskChecked(task)"
-      />
+      <draggable
+        v-model="localTask.subtasks"
+        item-key="id"
+        class="flex flex-col items-center w-full border-l border-dotted border-neutral-500"
+        @end="onEnd"
+      >
+        <template #item="{ element, index }">
+          <TaskCard
+            :task="element"
+            :index="index"
+            @task-checked="taskChecked(task)"
+          />
+        </template>
+      </draggable>
     </div>
 
     <TaskModal

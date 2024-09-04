@@ -1,35 +1,44 @@
 <template>
-  <div class="bg-white p-4 rounded-xl">
-    <div>
-      <p>Tu peux télécharger ta liste des tâches ici !</p>
-      <a href="/assets/data/data.json" download>
-        <button class="bg-blue-400 p-2 rounded-lg border">
-          Dl la liste de tâche
+  <div class="p-4 rounded-xl flex flex-col gap-4 w-fit">
+    <div class="flex gap-4">
+      <a href="/api/export-data" download="data.json">
+        <button
+          class="bg-orange-300 p-2 rounded-lg shadow-md transition-all hover:bg-amber-500"
+        >
+          Télécharge ta liste de tâche !
         </button>
       </a>
-    </div>
-    <form class="flex flex-col gap-4" @submit.prevent="handleSubmit">
-      <div class="flex flex-col gap-4">
-        <label for="file"
-          >Ou Tu peux exporter ta propre liste de tâche ? VAZY Upload la !
-        </label>
+      <form class="flex flex-col gap-4" @submit.prevent="handleSubmit">
+        <div class="flex gap-4 items-center">
+          <label
+            for="file"
+            class="bg-orange-300 w-fit p-2 shadow-md rounded-lg transition-all hover:bg-amber-500"
+          >
+            Exporter le fichier !
+          </label>
 
-        <input
-          id="file"
-          type="file"
-          name="file"
-          accept="application/json"
-          @change="fileChosen"
-        />
-      </div>
+          <input
+            id="file"
+            type="file"
+            name="file"
+            accept="application/json"
+            class="hidden"
+            @change="fileChosen"
+          />
+        </div>
+      </form>
+    </div>
+
+    <div>
+      <p v-if="inputFileIsFull">C'est ce fichier ? ==> {{ fileName }}</p>
       <button
         v-if="inputFileIsFull"
         type="submit"
-        class="bg-blue-400 p-2 rounded-lg"
+        class="bg-orange-300 p-2 rounded-lg shadow-md transition-all hover:bg-amber-500"
       >
         Exporter la liste !
       </button>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -40,11 +49,13 @@ import { useState } from "#app";
 const taskList = useState("list");
 const jsonData = ref(null);
 const inputFileIsFull = ref(false);
+const fileName = ref("");
 
 const fileChosen = (event: Event) => {
   const input = event.target as HTMLInputElement;
   if (input.value.length > 0) {
     inputFileIsFull.value = true;
+    fileName.value = input.value.substring(input.value.lastIndexOf("\\") + 1);
   } else {
     inputFileIsFull.value = false;
   }
@@ -56,6 +67,7 @@ const handleSubmit = (event: Event) => {
   console.log(formData);
 
   const file = formData.get("file") as File | null;
+
   console.log(file);
 
   if (file) {

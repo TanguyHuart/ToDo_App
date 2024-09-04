@@ -11,17 +11,20 @@ L'utilisateur doit pouvoir changer le nom d'une tâche.
 L'utilisateur doit pouvoir supprimer une tâche.     
  ==> OK
 L'utilisateur doit pouvoir ré-ordonner les tâches.  
-==> OK seulement sur les taches root
+==> OK 
 L'utilisateur doit avoir accès aux actions applicables sur une tâche via un menu             
 ==> OK
 L'utilisateur doit pouvoir ajouter des tâches avant ou après des taches existantes                 
-L'utilisateur doit pouvoir ajouter une ou plusieures sous-tâches à une tâche, celles-ci pouvant aussi avoir des sous-tâches, et ainsi de suite, sans limite de profondeur       ==> OK
+L'utilisateur doit pouvoir ajouter une ou plusieures sous-tâches à une tâche, celles-ci pouvant aussi avoir des sous-tâches, et ainsi de suite, sans limite de profondeur      
+ ==> OK
 L'utilisateur doit pouvoir manipuler les sous tâches commes les tâches de base  
-=+> OK sauf pour le drag and drop 
+=+> OK 
 L'utilisateur ne peut pas compléter une tâche parent si toutes les sous-tâches ne sont pas complétées. Également, si toutes les sous-tâches d'une tâche sont complétées, alors la tâche parent doit être indiquée comme complète 
 ==> OK
 L'utilisateur doit pouvoir uploader une liste de tâches depuis un fichier json.
+==> OK
 L'utilisateur doit pouvoir télécharger sa liste de tâches en un fichier json.
+==> OK
 
 // A FAIRE
 
