@@ -8,6 +8,7 @@ import { writeTasksData, modifyTaskFunction } from "~/utils/writeData";
 defineProps<{ task: TTask; isVisible: boolean }>();
 
 const taskList = useState<TTask[]>("list");
+const taskCreated = useState("taskCreated");
 const addFormIsVisible = ref<boolean>(false);
 const modifyFormIsVisible = ref<boolean>(false);
 const addInput = ref<string>("");
@@ -26,10 +27,12 @@ const closeModale = () => {
 // puis on écrit dans le JSON via la fonction writeTaskData
 
 const addNewSubTask = (
+  event: Event,
   parentTask: TTask,
   subTaskLabel: string,
   index: number,
 ): TTask => {
+  event.preventDefault();
   const newSubTask: TTask = {
     id: uuidv4(),
     label: subTaskLabel,
@@ -39,6 +42,7 @@ const addNewSubTask = (
   };
   parentTask.subtasks?.splice(index, 0, newSubTask);
   writeTasksData(taskList.value);
+  taskCreated.value = true;
   closeModale();
   return newSubTask;
 };
@@ -127,14 +131,21 @@ const handleModifyTaskEvent = (task: TTask) => {
               :key="subtask.id"
               class="bg-green-500 p-2 border rounded w-10"
               @click="
-                addNewSubTask(task, addInput, task.subtasks.indexOf(subtask))
+                addNewSubTask(
+                  $event,
+                  task,
+                  addInput,
+                  task.subtasks.indexOf(subtask),
+                )
               "
             >
               {{ task.subtasks.indexOf(subtask) + 1 }}
             </button>
             <button
               class="bg-green-500 p-2 border rounded w-10"
-              @click="addNewSubTask(task, addInput, task.subtasks.length)"
+              @click="
+                addNewSubTask($event, task, addInput, task.subtasks.length)
+              "
             >
               {{ task.subtasks.length + 1 }}
             </button>

@@ -6,6 +6,7 @@ L'utilisateur doit pouvoir créer des tâches à partir d'une liste vide
 L'utilisateur doit pouvoir indiquer qu'une tâche est complétée ou non. 
  ==>   OK
 L'utilisateur doit pouvoir savoir lorsqu'une tâche à été créée, et lorsqu'elle à été complétée.
+==> OK 
 L'utilisateur doit pouvoir changer le nom d'une tâche.  
 ==> OK
 L'utilisateur doit pouvoir supprimer une tâche.     
@@ -14,7 +15,8 @@ L'utilisateur doit pouvoir ré-ordonner les tâches.
 ==> OK 
 L'utilisateur doit avoir accès aux actions applicables sur une tâche via un menu             
 ==> OK
-L'utilisateur doit pouvoir ajouter des tâches avant ou après des taches existantes                 
+L'utilisateur doit pouvoir ajouter des tâches avant ou après des taches existantes   
+==> OK              
 L'utilisateur doit pouvoir ajouter une ou plusieures sous-tâches à une tâche, celles-ci pouvant aussi avoir des sous-tâches, et ainsi de suite, sans limite de profondeur      
  ==> OK
 L'utilisateur doit pouvoir manipuler les sous tâches commes les tâches de base  

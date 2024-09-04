@@ -6,6 +6,7 @@ import { writeTasksData } from "~/utils/writeData";
 
 const taskList = useState<TTask[]>("list");
 const input = useState<string>("input", () => "");
+const taskCreated = useState("taskCreated");
 
 // fonction spécifique d'ajout de tache 1er degres de parenté, fonctionne que si un input est rentré.
 
@@ -17,10 +18,10 @@ const addTask = (e: Event, index: number) => {
       label: input.value,
       subtasks: [],
       isDone: false,
-      // index: taskList.value.length + 1,
     };
     taskList.value.splice(index, 0, taskToAdd);
     input.value = "";
+    taskCreated.value = true;
     writeTasksData(taskList.value);
     return taskToAdd;
   }
