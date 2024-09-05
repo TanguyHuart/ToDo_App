@@ -10,6 +10,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        roboto: ["Roboto", "sans-serif"],
+        hand: ["Shantell Sans", "cursive"],
+      },
       keyframes: {
         entrance: {
           "0%": { transform: "scale(0.5)" },

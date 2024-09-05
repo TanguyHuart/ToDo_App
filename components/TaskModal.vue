@@ -27,12 +27,10 @@ const closeModale = () => {
 // puis on écrit dans le JSON via la fonction writeTaskData
 
 const addNewSubTask = (
-  event: Event,
   parentTask: TTask,
   subTaskLabel: string,
   index: number,
 ): TTask => {
-  event.preventDefault();
   const newSubTask: TTask = {
     id: uuidv4(),
     label: subTaskLabel,
@@ -80,7 +78,7 @@ const handleModifyTaskEvent = (task: TTask) => {
 
 <template>
   <div
-    class="z-20 shadow-md shadow-black bg-white rounded fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 flex flex-col gap-4 w-11/12 min-h-48"
+    class="z-40 shadow-md shadow-black bg-white rounded fixed top-1/2 left-1/2 -translate-x-1/2 p-4 flex flex-col gap-4 w-11/12 min-h-48"
   >
     <button
       class="absolute top-0 right-0 font-bold p-2 bg-red-400 transition-all hover:bg-red-500 border-b border-l w-10 h-10"
@@ -89,63 +87,64 @@ const handleModifyTaskEvent = (task: TTask) => {
       X
     </button>
     <div class="flex flex-col gap-4">
-      <p class="text-center text-lg border-b border-neutral-300">
+      <p
+        class="text-center text-xl border-b border-neutral-300 pb-4 font-indie font-bold tracking-wider"
+      >
         {{ task.label }}
       </p>
       <div class="flex flex-wrap gap-4 justify-evenly">
         <button
-          class="bg-red-500 p-4 min-w-32"
+          class="border bg-red-400 rounded-xl p-4 min-w-32 hover:bg-red-500 transition-all"
           @click="deleteTask(taskList, task.id)"
         >
-          Supprimer la tâche
+          Delete
         </button>
         <button
-          class="border p-4 min-w-32"
-          @click="modifyFormIsVisible = !modifyFormIsVisible"
+          class="border bg-amber-100 rounded-xl p-4 min-w-32 hover:bg-amber-400 transition-all"
+          @click="
+            modifyFormIsVisible = !modifyFormIsVisible;
+            addFormIsVisible = false;
+          "
         >
-          Modifier la tâche
+          Modify
         </button>
         <button
-          class="border bg-blue-200 p-4 min-w-32"
-          @click="addFormIsVisible = !addFormIsVisible"
+          class="border rounded-xl bg-blue-200 hover:bg-blue-300 p-4 min-w-32 transition-all"
+          @click="
+            addFormIsVisible = !addFormIsVisible;
+            modifyFormIsVisible = false;
+          "
         >
-          Ajouter une sous-tâche
+          Add subtask
         </button>
       </div>
     </div>
-    <div v-if="addFormIsVisible" class="flex flex-col items-center">
-      <label for="input">Ajouter une sous tâche :</label>
-      <div class="flex gap-4">
+    <div v-if="addFormIsVisible" class="flex flex-col items-center w-full">
+      <label for="addinput">Add subtask :</label>
+      <div class="flex gap-4 items-center w-full justify-center">
         <input
-          id="input"
+          id="addinput"
           v-model="addInput"
           type="text"
-          placeholder="Entrez votre texte ici"
-          class="border border-black rounded p-2 focus:border-2"
+          placeholder="Please enter your text here"
+          class="border border-black rounded p-2 focus:border-2 h-10 w-1/2"
         />
         <div v-if="addInput">
-          <p>En quel position ?</p>
+          <p>Witch position ?</p>
           <div class="flex flex-wrap gap-2">
             <button
               v-for="subtask of task.subtasks"
               :key="subtask.id"
               class="bg-green-500 p-2 border rounded w-10"
               @click="
-                addNewSubTask(
-                  $event,
-                  task,
-                  addInput,
-                  task.subtasks.indexOf(subtask),
-                )
+                addNewSubTask(task, addInput, task.subtasks.indexOf(subtask))
               "
             >
               {{ task.subtasks.indexOf(subtask) + 1 }}
             </button>
             <button
               class="bg-green-500 p-2 border rounded w-10"
-              @click="
-                addNewSubTask($event, task, addInput, task.subtasks.length)
-              "
+              @click="addNewSubTask(task, addInput, task.subtasks.length)"
             >
               {{ task.subtasks.length + 1 }}
             </button>
@@ -153,15 +152,15 @@ const handleModifyTaskEvent = (task: TTask) => {
         </div>
       </div>
     </div>
-    <div v-if="modifyFormIsVisible" class="flex flex-col items-center">
-      <label for="input">Modifier la tâche :</label>
-      <div class="flex gap-4">
+    <div v-if="modifyFormIsVisible" class="flex flex-col items-center w-full">
+      <label for="modifyinput">Modify task :</label>
+      <div class="flex gap-4 w-full justify-center">
         <input
-          id="input"
+          id="modifyinput"
           v-model="modifyInput"
           type="text"
           :placeholder="task.label"
-          class="border border-black rounded p-2 focus:border-2"
+          class="border border-black rounded p-2 focus:border-2 w-1/2"
         />
         <button
           v-if="modifyInput"

@@ -1,0 +1,54 @@
+[
+  {
+    "id": "d231ae86-039b-4947-9f3d-e27c18628ccf",
+    "label": "This is my very first task",
+    "subtasks": [],
+    "isDone": false
+  },
+  {
+    "id": "06345fc2-fd93-4802-9476-bad9f3d5a6cc",
+    "label": "My application to Araïko",
+    "subtasks": [
+      {
+        "id": "156ac6a7-7db4-4535-a9c5-02109a5f94f7",
+        "label": "Meet with Zoé",
+        "subtasks": [],
+        "isDone": true,
+        "index": 1
+      },
+      {
+        "id": "d0904d9b-470e-4af7-95f9-5c928476bc3d",
+        "label": "Meet with Fabien",
+        "subtasks": [],
+        "isDone": true
+      },
+      {
+        "id": "99928aad-8a23-4cc2-8e43-696605dd3e35",
+        "label": "Succeed the Technical Test",
+        "subtasks": [
+          {
+            "id": "b4046e66-a47d-417e-a793-881359b76954",
+            "label": "Send the project",
+            "subtasks": [],
+            "isDone": true
+          },
+          {
+            "id": "96023826-265d-4313-80f6-f4ecb27a5eba",
+            "label": "Debrief Technical Test",
+            "subtasks": [],
+            "isDone": false
+          }
+        ],
+        "isDone": false
+      },
+      {
+        "id": "d106e47a-44a0-469e-9249-cd924b3dca21",
+        "label": "Meet CTO/CEO",
+        "subtasks": [],
+        "isDone": false
+      }
+    ],
+    "isDone": false,
+    "index": 1
+  }
+]

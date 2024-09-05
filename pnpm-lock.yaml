@@ -14,9 +14,6 @@ importers:
       uuid:
         specifier: ^10.0.0
         version: 10.0.0
-      vue:
-        specifier: latest
-        version: 3.4.38(typescript@5.5.4)
       vuedraggable:
         specifier: ^4.1.0
         version: 4.1.0(vue@3.4.38(typescript@5.5.4))

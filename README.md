@@ -1,75 +1,37 @@
-# Nuxt 3 Minimal Starter
+# Hi Welcome to the TODO List Project! 
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+If you want to install the project, please follow these instructions : 
 
-## Setup
-
-Make sure to install the dependencies:
+## Clone the project
 
 ```bash
-# npm
-npm install
+git clone git@github.com:TanguyHuart/ToDo_App.git
+cd ToDo_App/
 
+```
+
+## Install Dependencies : PNPM
+
+I use PNPM to manage the dependencies. 
+
+```bash
 # pnpm
 pnpm install
 
-# yarn
-yarn install
-
-# bun
-bun install
 ```
+The project use Nuxt 3, you can see the [Nuxt documentation here](https://nuxt.com/docs/getting-started/introduction). 
 
-## Development Server
+## Serveur de Development
 
-Start the development server on `http://localhost:3000`:
+Start the development server on `http://localhost:3000` :
 
 ```bash
-# npm
-npm run dev
-
 # pnpm
-pnpm run dev
+pnpm dev
 
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+## Enjoy !
 
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Try to create some tasks ! 
+Or import the model list "modelList.json" at the root of the project.

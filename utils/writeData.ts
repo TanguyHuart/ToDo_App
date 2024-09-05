@@ -10,16 +10,16 @@ export const writeTasksData = async (data: TTask[]) => {
     body: JSON.stringify(data),
   });
   const result = await res.json();
-  if (result.success) {
-    console.log("Data saved !!!!");
-  } else {
-    console.error("Error to save data");
+  if (!result.success) {
+    return new Error("Error for save data , please retry");
   }
 };
 
 // fonction de modification de la tâche
 // boucle sur tes tâche et les subtaches s'il y en a pour trouver l'id qui correspond a la tache modifiée .
 // modifie la tache dans l tableaud e référence puis fait appel a la fonction écrire le tableau dans le json.
+// tasklist correspond a la liste globale qui est conte u dans le json , on y touche que lors de la sauvegarde des modifications.
+// tasks correspond a la liste globale mais qui va etre modifiée par l'opération
 export const modifyTaskFunction = (
   taskList: TTask[],
   tasks: TTask[],

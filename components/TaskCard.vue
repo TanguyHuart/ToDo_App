@@ -11,6 +11,7 @@ const taskList = useState<TTask[]>("list");
 // const taskDone = ref(false);
 const modalIsVisible = ref(false);
 const localTask = ref<TTask>(props.task);
+const isDrag = ref(false);
 
 // creation d'un evenement vers le parents losque que on check une task
 const emit = defineEmits(["task-checked"]);
@@ -27,7 +28,7 @@ const checkTaskAreDone = (task: TTask) => {
 
   if (allTrue) {
     task.isDone = true;
-    modifyTaskFunction(taskList.value, taskList.value, task);
+
     emit("task-checked");
   } else {
     task.isDone = false;
@@ -43,8 +44,8 @@ const toogleTask = (task: TTask) => {
   } else {
     task.isDone = !task.isDone;
     emit("task-checked");
-    modifyTaskFunction(taskList.value, taskList.value, task);
   }
+  modifyTaskFunction(taskList.value, taskList.value, task);
 };
 
 // fonction qui permet de fermer la modale de gestion de tâche
@@ -55,59 +56,76 @@ const closeModal = () => {
 // fonction de fin drag/drop qui permet d'ecrire le nouveau positionnement dans le json.
 const onEnd = () => {
   writeTasksData(taskList.value);
+  isDrag.value = false;
+};
+
+const onStart = () => {
+  isDrag.value = true;
 };
 </script>
 
 <template>
   <div
     :datatype-id="task.id"
-    class="w-full p-4 pb-0 pr-0 flex flex-col border-t-4"
-    :class="{ 'bg-green-200': task.isDone, 'bg-yellow-50': !task.isDone }"
+    class="w-full relative pr-0 flex hover:cursor-grab rounded-l-2xl shadow-md border-amber-500 transition-all hover:shadow-black"
   >
-    <div class="flex justify-between gap-4 py-2">
-      <h2 :class="{ 'line-through': task.isDone }">{{ task.label }}</h2>
-      <div class="flex gap-2 pb-2 pr-2">
-        <button
-          v-if="!task.isDone"
-          class="h-10 bg-green-500 rounded-lg p-2"
-          @click="toogleTask(task)"
-        >
-          Done
-        </button>
-        <button
-          v-if="task.isDone"
-          class="h-10 bg-red-500 rounded-lg p-2"
-          @click="toogleTask(task)"
-        >
-          Undo
-        </button>
-        <button
-          class="h-10 bg-blue-300 rounded-lg p-2"
-          @click="modalIsVisible = true"
-        >
-          Menu
-        </button>
-      </div>
+    <div class="bg-neutral-200 py-2 rounded-l-3xl">
+      <img src="/icons/drag.png" alt="drag-icon" class="w-4" />
     </div>
-
     <div
-      v-if="task.subtasks && task.subtasks?.length > 0"
-      class="flex flex-col items-center w-full border-l border-dotted border-neutral-500"
+      class="w-full pl-4 py-2"
+      :class="{ 'bg-green-200': task.isDone, 'bg-yellow-50': !task.isDone }"
     >
-      <draggable
-        v-model="localTask.subtasks"
-        item-key="id"
-        class="flex flex-col items-center w-full border-l border-dotted border-neutral-500"
-        @end="onEnd"
+      <div class="flex justify-between items-center gap-4 py-2">
+        <h2
+          class="font-hand font-medium text-xl"
+          :class="{ 'line-through': task.isDone }"
+        >
+          {{ task.label }}
+        </h2>
+        <div class="flex gap-2 pr-2 items-center">
+          <button
+            class="relative h-6 w-6 border-2 rounded-lg p-2 transition-all hover:border-black"
+            @click="toogleTask(task)"
+          >
+            <img
+              v-if="task.isDone"
+              src="/icons/check.png"
+              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              alt="check-icon"
+            />
+          </button>
+
+          <button
+            class="rounded-lg transition-all w-8 hover:scale-[1.1]"
+            @click="modalIsVisible = true"
+          >
+            <img src="/icons/menu.png" alt="menu-icon" />
+          </button>
+        </div>
+      </div>
+
+      <div
+        v-if="task.subtasks && task.subtasks?.length > 0"
+        class="flex flex-col items-center w-full border-neutral-300 rounded-l-3xl pt-2"
       >
-        <template #item="{ element, index }">
-          <TaskCard
-            :task="element"
-            :index="index"
-            @task-checked="taskChecked(task)"
-          />
-        </template>
-      </draggable>
+        <draggable
+          v-model="localTask.subtasks"
+          item-key="id"
+          class="flex flex-col items-center w-full gap-4"
+          :class="{ 'drop-shadow-[0_0_0.15rem_orange]': isDrag }"
+          @end="onEnd"
+          @start="onStart"
+        >
+          <template #item="{ element, index }">
+            <TaskCard
+              :task="element"
+              :index="index"
+              @task-checked="taskChecked(task)"
+            />
+          </template>
+        </draggable>
+      </div>
     </div>
 
     <TaskModal
