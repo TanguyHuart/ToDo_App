@@ -3,7 +3,8 @@
     "id": "d231ae86-039b-4947-9f3d-e27c18628ccf",
     "label": "This is my very first task",
     "subtasks": [],
-    "isDone": false
+    "isDone": false,
+    "color": "#fefce8"
   },
   {
     "id": "06345fc2-fd93-4802-9476-bad9f3d5a6cc",
@@ -14,13 +15,15 @@
         "label": "Meet with Zoé",
         "subtasks": [],
         "isDone": true,
-        "index": 1
+        "index": 1,
+        "color": "#fefce8"
       },
       {
         "id": "d0904d9b-470e-4af7-95f9-5c928476bc3d",
         "label": "Meet with Fabien",
         "subtasks": [],
-        "isDone": true
+        "isDone": true,
+        "color": "#fefce8"
       },
       {
         "id": "99928aad-8a23-4cc2-8e43-696605dd3e35",
@@ -30,25 +33,31 @@
             "id": "b4046e66-a47d-417e-a793-881359b76954",
             "label": "Send the project",
             "subtasks": [],
-            "isDone": true
+            "isDone": true,
+            "color": "#fefce8"
+
           },
           {
             "id": "96023826-265d-4313-80f6-f4ecb27a5eba",
             "label": "Debrief Technical Test",
             "subtasks": [],
-            "isDone": false
+            "isDone": false,
+            "color": "#fefce8"
           }
         ],
-        "isDone": false
+        "isDone": false,
+        "color": "#fefce8"
       },
       {
         "id": "d106e47a-44a0-469e-9249-cd924b3dca21",
         "label": "Meet CTO/CEO",
         "subtasks": [],
-        "isDone": false
+        "isDone": false,
+        "color": "#fefce8"
       }
     ],
     "isDone": false,
-    "index": 1
+    "index": 1,
+    "color": "#fefce8"
   }
 ]
