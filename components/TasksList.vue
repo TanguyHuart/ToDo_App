@@ -23,7 +23,7 @@ const onStart = () => {
 
 <template>
   <div class="flex flex-col justify-center items-center">
-    <div v-if="taskList.length === 0">No task yet !</div>
+    <div v-if="taskList.length === 0" class="text-xl">No task yet !</div>
     <draggable
       v-model="taskList"
       item-key="id"

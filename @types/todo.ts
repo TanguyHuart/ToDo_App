@@ -3,4 +3,5 @@ export type TTask = {
   label: string;
   subtasks: TTask[];
   isDone: boolean;
+  color: string;
 };

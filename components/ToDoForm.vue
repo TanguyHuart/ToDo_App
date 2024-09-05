@@ -17,6 +17,7 @@ const addTask = (index: number) => {
       label: input.value,
       subtasks: [],
       isDone: false,
+      color: "#fefce8",
     };
     taskList.value.splice(index, 0, taskToAdd);
     input.value = "";
@@ -40,7 +41,7 @@ const addTask = (index: number) => {
           size="40"
         />
         <div v-if="input" class="flex flex-col gap-2">
-          <p>In witch position ?</p>
+          <p v-if="taskList.length > 0">In witch position ?</p>
           <div class="flex gap-2">
             <button
               v-for="task of taskList"
@@ -51,10 +52,18 @@ const addTask = (index: number) => {
               {{ taskList.indexOf(task) + 1 }}
             </button>
             <button
+              v-if="taskList.length > 0"
               class="bg-green-500 shadow-md p-2 rounded-lg transition-all hover:bg-green-600 w-10"
               @click="addTask(taskList.length)"
             >
               {{ taskList.length + 1 }}
+            </button>
+            <button
+              v-if="taskList.length === 0"
+              class="bg-green-500 p-2 border rounded w-10"
+              @click="addTask(taskList.length)"
+            >
+              Ok
             </button>
           </div>
         </div>

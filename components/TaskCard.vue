@@ -74,11 +74,12 @@ const onStart = () => {
     </div>
     <div
       class="w-full pl-4 py-2"
-      :class="{ 'bg-green-200': task.isDone, 'bg-yellow-50': !task.isDone }"
+      :class="{ 'bg-green-200': task.isDone }"
+      :style="{ backgroundColor: !task.isDone ? task.color : '' }"
     >
       <div class="flex justify-between items-center gap-4 py-2">
         <h2
-          class="font-hand font-medium text-xl"
+          class="font-hand font-medium text-xl text-black"
           :class="{ 'line-through': task.isDone }"
         >
           {{ task.label }}

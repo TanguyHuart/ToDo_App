@@ -13,6 +13,8 @@ const addFormIsVisible = ref<boolean>(false);
 const modifyFormIsVisible = ref<boolean>(false);
 const addInput = ref<string>("");
 const modifyInput = ref<string>("");
+const colorInput = ref<string>("");
+const colorInputChanged = ref<boolean>(false);
 
 // emit défini un evenement qui se passe dans le composant pour l'envoyer au prent qui va le receptionner. quand la fonction closeModale est effectuée dans ce composant , emit est lancé
 // et le composant parent va lui meme lancer sa propre fonction.
@@ -36,6 +38,7 @@ const addNewSubTask = (
     label: subTaskLabel,
     subtasks: [],
     isDone: false,
+    color: "#fefce8",
     // index: parentTask.subtasks.length + 1,
   };
   parentTask.subtasks?.splice(index, 0, newSubTask);
@@ -69,7 +72,12 @@ const deleteTask = (tasks: TTask[], id: string) => {
 // pour la fonction de modification , trouver la tache en parcourant le tableau et modifier ses propriété
 
 const handleModifyTaskEvent = (task: TTask) => {
-  task.label = modifyInput.value;
+  if (modifyInput.value) {
+    task.label = modifyInput.value;
+  }
+  if (colorInput.value) {
+    task.color = colorInput.value;
+  }
 
   modifyTaskFunction(taskList.value, taskList.value, task);
   closeModale();
@@ -104,6 +112,7 @@ const handleModifyTaskEvent = (task: TTask) => {
           @click="
             modifyFormIsVisible = !modifyFormIsVisible;
             addFormIsVisible = false;
+            colorInput = task.color;
           "
         >
           Modify
@@ -130,7 +139,7 @@ const handleModifyTaskEvent = (task: TTask) => {
           class="border border-black rounded p-2 focus:border-2 h-10 w-1/2"
         />
         <div v-if="addInput">
-          <p>Witch position ?</p>
+          <p v-if="task.subtasks.length > 0">Witch position ?</p>
           <div class="flex flex-wrap gap-2">
             <button
               v-for="subtask of task.subtasks"
@@ -143,10 +152,18 @@ const handleModifyTaskEvent = (task: TTask) => {
               {{ task.subtasks.indexOf(subtask) + 1 }}
             </button>
             <button
+              v-if="task.subtasks.length > 0"
               class="bg-green-500 p-2 border rounded w-10"
               @click="addNewSubTask(task, addInput, task.subtasks.length)"
             >
               {{ task.subtasks.length + 1 }}
+            </button>
+            <button
+              v-if="task.subtasks.length === 0"
+              class="bg-green-500 p-2 border rounded w-10"
+              @click="addNewSubTask(task, addInput, task.subtasks.length)"
+            >
+              Ok
             </button>
           </div>
         </div>
@@ -154,7 +171,12 @@ const handleModifyTaskEvent = (task: TTask) => {
     </div>
     <div v-if="modifyFormIsVisible" class="flex flex-col items-center w-full">
       <label for="modifyinput">Modify task :</label>
-      <div class="flex gap-4 w-full justify-center">
+      <div class="flex gap-4 w-full justify-center items-center">
+        <input
+          v-model="colorInput"
+          type="color"
+          @change="colorInputChanged = true"
+        />
         <input
           id="modifyinput"
           v-model="modifyInput"
@@ -162,8 +184,9 @@ const handleModifyTaskEvent = (task: TTask) => {
           :placeholder="task.label"
           class="border border-black rounded p-2 focus:border-2 w-1/2"
         />
+
         <button
-          v-if="modifyInput"
+          v-if="modifyInput || colorInputChanged"
           class="bg-green-500 p-2 border rounded"
           @click="handleModifyTaskEvent(task)"
         >
